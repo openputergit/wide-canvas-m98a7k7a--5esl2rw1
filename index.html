@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prateek E-Mitra Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #FFD700;
+            --dark-gold: #B8860B;
+            --brown: #8B4513;
+            --light-gold: #FFF8DC;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1536566482680-fca31930a0bd?q=80&w=1000&auto=format&fit=crop');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5));
+            z-index: -1;
+        }
+        
+        /* Glassmorphism Styles */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .glass-gold {
+            background: rgba(255, 215, 0, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(184, 134, 11, 0.37);
+        }
+        
+        .glass-input {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+        
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .glass-input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.3);
+        }
+        
+        .glass-button {
+            background: rgba(255, 215, 0, 0.25);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: white;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-button:hover {
+            background: rgba(255, 215, 0, 0.4);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .glass-button:active {
+            transform: translateY(1px);
+        }
+
+        .glass-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        
+        .glass-table th {
+            background: rgba(255, 215, 0, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            font-weight: bold;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .glass-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .glass-table tbody tr {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            transition: background-color 0.2s ease;
+        }
+        
+        .glass-table tbody tr:hover {
+            background: rgba(255, 215, 0, 0.15);
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background-color: rgba(255, 215, 0, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .loading {
+            animation: shimmer 2.5s infinite;
+            background: linear-gradient(90deg, 
+                        rgba(255,215,0,0), 
+                        rgba(255,215,0,0.4), 
+                        rgba(255,215,0,0));
+            background-size: 200% 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        /* Date Range Picker Styles */
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Tooltip Styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 120px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+        }
+        
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 215, 0, 0.5);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 215, 0, 0.7);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        }
+        
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal-content {
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: fadeIn 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative">
+    <div id="app" class="container mx-auto px-4 py-8 relative z-10">
+        <!-- Login Section -->
+        <div id="login-section" class="max-w-md mx-auto">
+            <div class="glass-gold rounded-lg p-8 mb-8">
+                <div class="mb-6">
+                    <img src="https://images.unsplash.com/photo-1614332287897-cdc485fa562d?q=80&w=150&auto=format&fit=crop" alt="E-Mitra Logo" class="w-24 h-24 mx-auto mb-4 rounded-full border-4 border-gold object-cover">
+                    <h1 class="text-3xl font-bold text-center text-white">Prateek E-Mitra Portal</h1>
+                    <p class="text-center text-white mt-2">Digital Government Services Platform</p>
+                </div>
+                <div class="space-y-4">
+                    <div class="relative">
+                        <i class="bi bi-phone absolute left-3 top-3 text-white"></i>
+                        <input type="tel" id="mobile" placeholder="Mobile Number" class="glass-input w-full p-3 pl-10 rounded-lg" maxlength="10">
+                    </div>
+                    <div class="relative">
+                        <i class="bi bi-lock absolute left-3 top-3 text-white"></i>
+                        <input type="password" id="password" placeholder="Password" class="glass-input w-full p-3 pl-10 rounded-lg">
+                    </div>
+                    <button onclick="login()" class="glass-button w-full p-3 rounded-lg hover:opacity-90 transition flex items-center justify-center">
+                        <i class="bi bi-box-arrow-in-right mr-2"></i> Login
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section (Initially Hidden) -->
+        <div id="dashboard-section" class="hidden">
+            <!-- Header with logo and greeting -->
+            <div class="flex items-center justify-between mb-6 glass-gold p-4 rounded-lg">
+                <div class="flex items-center">
+                    <img src="https://images.unsplash.com/photo-1614332287897-cdc485fa562d?q=80&w=50&auto=format&fit=crop" alt="E-Mitra Logo" class="w-12 h-12 rounded-full border-2 border-gold mr-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Prateek E-Mitra</h2>
+                        <p class="text-sm text-white"><span id="current-date-time"></span></p>
+                    </div>
+                </div>
+                <div class="flex space-x-2">
+                    <button id="settings-btn" class="glass-button px-3 py-2 rounded-lg hover:opacity-90 transition text-sm">
+                        <i class="bi bi-gear"></i>
+                    </button>
+                    <button onclick="logout()" class="glass-button px-4 py-2 rounded-lg hover:opacity-90 transition text-sm">
+                        <i class="bi bi-power mr-1"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="glass-gold p-6 rounded-lg text-center relative">
+                    <i class="bi bi-currency-rupee absolute top-4 right-4 text-2xl text-white opacity-25"></i>
+                    <h3 class="text-xl font-bold text-white">Today's Balance</h3>
+                    <p id="today-balance" class="text-3xl font-bold text-white">₹0</p>
+                </div>
+                <div class="glass-gold p-6 rounded-lg text-center relative">
+                    <i class="bi bi-calendar-check absolute top-4 right-4 text-2xl text-white opacity-25"></i>
+                    <h3 class="text-xl font-bold text-white">Previous Balance</h3>
+                    <p id="prev-balance" class="text-3xl font-bold text-white">₹0</p>
+                </div>
+                <div class="glass-gold p-6 rounded-lg text-center relative">
+                    <i class="bi bi-arrow-left-right absolute top-4 right-4 text-2xl text-white opacity-25"></i>
+                    <h3 class="text-xl font-bold text-white">Total Transactions</h3>
+                    <p id="total-transactions" class="text-3xl font-bold text-white">0</p>
+                </div>
+                <div class="glass-gold p-6 rounded-lg text-center relative">
+                    <i class="bi bi-graph-up-arrow absolute top-4 right-4 text-2xl text-white opacity-25"></i>
+                    <h3 class="text-xl font-bold text-white">Net Income</h3>
+                    <p id="net-income" class="text-3xl font-bold text-white">₹0</p>
+                </div>
+            </div>
+
+            <!-- Transaction Form -->
+            <div class="glass-gold p-6 rounded-lg mb-8 relative">
+                <div class="flex items-center mb-4">
+                    <i class="bi bi-plus-circle-fill text-white mr-2 text-xl"></i>
+                    <h2 class="text-2xl font-bold text-white">New Transaction</h2>
+                </div>
+                <form id="transaction-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <select id="transaction-type" class="glass-input p-3 rounded-lg" required>
+                        <option value="">Select Type</option>
+                        <option value="emitra">E-Mitra Work</option>
+                        <option value="aeps">AEPS</option>
+                        <option value="photocopy">Photocopy</option>
+                        <option value="lamination">Lamination</option>
+                        <option value="money_transfer">Money Transfer</option>
+                        <option value="document">Document Work</option>
+                        <option value="winding">Winding Work</option>
+                        <option value="online_form">Online Form</option>
+                        <option value="aadhar_download">Aadhar Download</option>
+                        <option value="marksheet_download">Marksheet Download</option>
+                        <option value="other">Other Work</option>
+                    </select>
+                    <input type="number" id="amount" class="glass-input p-3 rounded-lg" placeholder="Amount (₹)" required>
+                    <textarea id="remarks" class="glass-input p-3 rounded-lg md:col-span-2" placeholder="Remarks (Optional)" rows="2"></textarea>
+                    <button type="submit" class="glass-button py-3 rounded-lg hover:opacity-90 transition md:col-span-2 flex items-center justify-center">
+                        <i class="bi bi-check-circle-fill mr-2"></i> Add Transaction
+                    </button>
+                </form>
+            </div>
+
+            <!-- Transaction History & Reports -->
+            <div class="glass-gold p-6 rounded-lg">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <i class="bi bi-clock-history text-white mr-2 text-xl"></i>
+                        <h2 class="text-2xl font-bold text-white">Transaction History</h2>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="date-range">
+                            <input type="date" id="start-date" class="glass-input p-2 rounded-lg text-sm w-32">
+                            <span class="text-white">to</span>
+                            <input type="date" id="end-date" class="glass-input p-2 rounded-lg text-sm w-32">
+                            <button onclick="filterByDateRange()" class="glass-button p-2 rounded-lg hover:opacity-90 transition">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                        <button onclick="filterTransactions('today')" class="glass-button px-4 py-2 rounded-lg hover:opacity-90 transition text-sm flex items-center">
+                            <i class="bi bi-calendar-date mr-1"></i> Today
+                        </button>
+                        <button onclick="filterTransactions('week')" class="glass-button px-4 py-2 rounded-lg hover:opacity-90 transition text-sm flex items-center">
+                            <i class="bi bi-calendar-week mr-1"></i> This Week
+                        </button>
+                        <button onclick="filterTransactions('month')" class="glass-button px-4 py-2 rounded-lg hover:opacity-90 transition text-sm flex items-center">
+                            <i class="bi bi-calendar mr-1"></i> This Month
+                        </button>
+                        <button onclick="filterTransactions('all')" class="glass-button px-4 py-2 rounded-lg hover:opacity-90 transition text-sm flex items-center">
+                            <i class="bi bi-filter mr-1"></i> All
+                        </button>
+                        <div class="dropdown relative">
+                            <button id="download-btn" class="glass-button px-4 py-2 rounded-lg hover:opacity-90 transition text-sm flex items-center">
+                                <i class="bi bi-download mr-1"></i> Download
+                            </button>
+                            <div id="download-dropdown" class="hidden absolute right-0 mt-2 w-48 glass rounded-lg overflow-hidden z-10">
+                                <button onclick="downloadReport('csv')" class="w-full text-left px-4 py-2 hover:bg-opacity-10 hover:bg-white text-white">
+                                    <i class="bi bi-filetype-csv mr-2"></i> CSV Format
+                                </button>
+                                <button onclick="downloadReport('excel')" class="w-full text-left px-4 py-2 hover:bg-opacity-10 hover:bg-white text-white">
+                                    <i class="bi bi-filetype-xlsx mr-2"></i> Excel Format
+                                </button>
+                                <button onclick="downloadReport('pdf')" class="w-full text-left px-4 py-2 hover:bg-opacity-10 hover:bg-white text-white">
+                                    <i class="bi bi-filetype-pdf mr-2"></i> PDF Format
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass p-4 rounded-lg overflow-x-auto">
+                    <table id="transactions-table" class="glass-table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Remarks</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-body">
+                            <!-- Transaction rows will be added here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Summary Section -->
+                <div class="mt-6 glass p-4 rounded-lg">
+                    <h3 class="text-xl font-bold text-white mb-4">Category-wise Summary</h3>
+                    <div id="category-summary" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Summary items will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal">
+            <div class="modal-content glass-gold p-6 rounded-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-white">Settings</h3>
+                    <button id="close-settings" class="text-white hover:text-gold">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-white block mb-2">App Theme</label>
+                        <select id="theme-selector" class="glass-input p-3 rounded-lg w-full">
+                            <option value="glassmorphism">Glassmorphism</option>
+                            <option value="gold">Gold Theme</option>
+                            <option value="dark">Dark Theme</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-white block mb-2">Voice Assistance</label>
+                        <div class="flex items-center">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="voice" value="on" checked class="form-radio text-gold">
+                                <span class="ml-2 text-white">On</span>
+                            </label>
+                            <label class="inline-flex items-center ml-6">
+                                <input type="radio" name="voice" value="off" class="form-radio text-gold">
+                                <span class="ml-2 text-white">Off</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-white block mb-2">Language</label>
+                        <select id="language-selector" class="glass-input p-3 rounded-lg w-full">
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-white block mb-2">Data Backup</label>
+                        <button id="backup-data" class="glass-button w-full p-3 rounded-lg hover:opacity-90 transition">
+                            <i class="bi bi-cloud-upload mr-2"></i> Backup Data
+                        </button>
+                    </div>
+                    <div>
+                        <label class="text-white block mb-2">Restore Data</label>
+                        <button id="restore-data" class="glass-button w-full p-3 rounded-lg hover:opacity-90 transition">
+                            <i class="bi bi-cloud-download mr-2"></i> Restore Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Transaction Detail Modal -->
+        <div id="transaction-detail-modal" class="modal">
+            <div class="modal-content glass-gold p-6 rounded-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-white">Transaction Details</h3>
+                    <button id="close-detail-modal" class="text-white hover:text-gold">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+                <div id="transaction-detail-content" class="space-y-4">
+                    <!-- Transaction details will be populated here -->
+                </div>
+                <div class="flex justify-end mt-6 space-x-3">
+                    <button id="edit-transaction" class="glass-button px-4 py-2 rounded-lg">
+                        <i class="bi bi-pencil mr-1"></i> Edit
+                    </button>
+                    <button id="delete-transaction" class="glass-button px-4 py-2 rounded-lg bg-red-400 bg-opacity-20">
+                        <i class="bi bi-trash mr-1"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        // Initialize state with localStorage persistence
+        const appSlug = "prateek-emitra-" + Math.floor(Math.random() * 1000000);
+        let userId = localStorage.getItem('emitra-user-id') || "user-" + Math.floor(Math.random() * 1000000);
+        localStorage.setItem('emitra-user-id', userId);
+        
+        let state = {
+            isLoggedIn: false,
+            transactions: [],
+            todayBalance: 0,
+            previousBalance: 0,
+            filterMode: 'all',
+            startDate: null,
+            endDate: null,
+            currentLanguage: 'en',
+            voiceEnabled: true,
+            currentTheme: 'glassmorphism'
+        };
+
+        // Dropdown toggle
+        document.getElementById('download-btn').addEventListener('click', function() {
+            document.getElementById('download-dropdown').classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#download-btn') && !e.target.closest('#download-dropdown')) {
+                document.getElementById('download-dropdown').classList.add('hidden');
+            }
+        });
+
+        // Settings modal
+        document.getElementById('settings-btn').addEventListener('click', function() {
+            document.getElementById('settings-modal').classList.add('show');
+        });
+
+        document.getElementById('close-settings').addEventListener('click', function() {
+            document.getElementById('settings-modal').classList.remove('show');
+        });
+
+        // Close transaction detail modal
+        document.getElementById('close-detail-modal').addEventListener('click', function() {
+            document.getElementById('transaction-detail-modal').classList.remove('show');
+        });
+
+        // Keep date and time updated
+        function updateDateTime() {
+            const now = new Date();
+            const formattedDateTime = now.toLocaleDateString('en-IN', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            document.getElementById('current-date-time').textContent = formattedDateTime;
+        }
+        
+        // Update every second
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        // Text to speech function
+        function speakText(text) {
+            if (!state.voiceEnabled) return;
+            
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.lang = state.currentLanguage === 'hi' ? 'hi-IN' : 'en-US';
+            speechSynthesis.speak(speech);
+        }
+
+        // Login function
+        function login() {
+            const mobile = document.getElementById('mobile').value;
+            const password = document.getElementById('password').value;
+
+            // Show loading state
+            const loginButton = document.querySelector('#login-section button');
+            loginButton.innerHTML = '<i class="bi bi-hourglass-split animate-spin mr-2"></i> Logging in...';
+            loginButton.disabled = true;
+
+            setTimeout(() => {
+                if (mobile === '7891303829' && password === '8462') {
+                    state.isLoggedIn = true;
+                    localStorage.setItem('emitra-mobile', mobile);
+                    localStorage.setItem('emitra-password', password);
+                    
+                    document.getElementById('login-section').classList.add('hidden');
+                    document.getElementById('dashboard-section').classList.remove('hidden');
+                    
+                    // Set today's date as default for date filters
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('start-date').value = today;
+                    document.getElementById('end-date').value = today;
+                    
+                    // Welcome voice message
+                    const welcomeText = state.currentLanguage === 'hi' ? 
+                        'प्रतीक ई-मित्र में आपका स्वागत है' : 
+                        'Welcome to Prateek E-Mitra Portal';
+                    speakText(welcomeText);
+                    
+                    // Load transactions from database
+                    loadTransactions();
+                } else {
+                    alert('Invalid credentials. Please try again.');
+                    loginButton.innerHTML = '<i class="bi bi-box-arrow-in-right mr-2"></i> Login';
+                    loginButton.disabled = false;
+                }
+            }, 1000);
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to log out?')) {
+                state.isLoggedIn = false;
+                localStorage.removeItem('emitra-mobile');
+                localStorage.removeItem('emitra-password');
+                document.getElementById('login-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('hidden');
+            }
+        }
+
+        // Load transactions from database
+        async function loadTransactions() {
+            try {
+                // Show loading indicator
+                const tbody = document.getElementById('transactions-body');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-8 text-white">
+                            <i class="bi bi-hourglass-split animate-spin text-4xl block mb-2"></i>
+                            Loading transactions...
+                        </td>
+                    </tr>
+                `;
+                
+                const response = await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/mongodb', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer dP4m0Sjx6LOwW3k0TsTEzizU2Jg1'
+                    },
+                    body: JSON.stringify({
+                        appSlug: appSlug,
+                        action: 'read',
+                        collection: 'transactions'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    state.transactions = data.result || [];
+                    
+                    // Sort transactions by timestamp (newest first)
+                    state.transactions.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                    
+                    updateDashboard();
+                } else {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="text-center py-8 text-white">
+                                <i class="bi bi-exclamation-triangle text-4xl block mb-2"></i>
+                                Error loading transactions
+                            </td>
+                        </tr>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+                document.getElementById('transactions-body').innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-8 text-white">
+                            <i class="bi bi-exclamation-triangle text-4xl block mb-2"></i>
+                            Error loading transactions: ${error.message}
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Save transaction to database
+        async function saveTransaction(transaction) {
+            try {
+                // Disable the submit button and show loading state
+                const submitButton = document.querySelector('#transaction-form button[type="submit"]');
+                submitButton.innerHTML = '<i class="bi bi-hourglass-split animate-spin mr-2"></i> Saving...';
+                submitButton.disabled = true;
+                
+                const response = await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/mongodb', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer dP4m0Sjx6LOwW3k0TsTEzizU2Jg1'
+                    },
+                    body: JSON.stringify({
+                        appSlug: appSlug,
+                        action: 'create',
+                        collection: 'transactions',
+                        data: transaction
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    transaction._id = data.result.insertedId;
+                    state.transactions.unshift(transaction);
+                    updateDashboard();
+                    
+                    // Speak confirmation
+                    const typeLabel = getTypeLabel(transaction.type);
+                    const confirmationText = state.currentLanguage === 'hi' ? 
+                        `${typeLabel} का ₹${transaction.amount} का लेनदेन सफल रहा` : 
+                        `Transaction of ₹${transaction.amount} for ${typeLabel} was successful`;
+                    speakText(confirmationText);
+                    
+                    // Show success message
+                    const successDiv = document.createElement('div');
+                    successDiv.className = 'fixed bottom-4 right-4 glass-gold p-4 rounded-lg z-50 fade-in';
+                    successDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <i class="bi bi-check-circle-fill text-white text-xl mr-2"></i>
+                            <div>
+                                <p class="font-bold text-white">Transaction Added Successfully!</p>
+                                <p class="text-sm text-white">${typeLabel}: ${formatCurrency(transaction.amount)}</p>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(successDiv);
+                    
+                    // Remove the success message after 5 seconds
+                    setTimeout(() => {
+                        successDiv.style.opacity = '0';
+                        setTimeout(() => {
+                            document.body.removeChild(successDiv);
+                        }, 300);
+                    }, 5000);
+                } else {
+                    alert('Failed to save transaction. Please try again.');
+                }
+                
+                // Reset form and button state
+                submitButton.innerHTML = '<i class="bi bi-check-circle-fill mr-2"></i> Add Transaction';
+                submitButton.disabled = false;
+                document.getElementById('transaction-form').reset();
+                
+            } catch (error) {
+                console.error('Error saving transaction:', error);
+                alert('Error saving transaction: ' + error.message);
+                
+                // Reset button state
+                const submitButton = document.querySelector('#transaction-form button[type="submit"]');
+                submitButton.innerHTML = '<i class="bi bi-check-circle-fill mr-2"></i> Add Transaction';
+                submitButton.disabled = false;
+            }
+        }
+
+        // Update transaction
+        async function updateTransaction(id, updatedData) {
+            try {
+                const response = await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/mongodb', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer dP4m0Sjx6LOwW3k0TsTEzizU2Jg1'
+                    },
+                    body: JSON.stringify({
+                        appSlug: appSlug,
+                        action: 'update',
+                        collection: 'transactions',
+                        id: id,
+                        data: updatedData
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update the transaction in the state
+                    const index = state.transactions.findIndex(t => t._id === id);
+                    if (index !== -1) {
+                        state.transactions[index] = { ...state.transactions[index], ...updatedData };
+                        updateDashboard();
+                        return true;
+                    }
+                }
+                return false;
+            } catch (error) {
+                console.error('Error updating transaction:', error);
+                return false;
+            }
+        }
+
+        // Delete transaction
+        async function deleteTransactionById(id) {
+            if (!confirm('Are you sure you want to delete this transaction?')) {
+                return false;
+            }
+            
+            try {
+                const response = await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/mongodb', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer dP4m0Sjx6LOwW3k0TsTEzizU2Jg1'
+                    },
+                    body: JSON.stringify({
+                        appSlug: appSlug,
+                        action: 'delete',
+                        collection: 'transactions',
+                        id: id
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Remove the transaction from the state
+                    const index = state.transactions.findIndex(t => t._id === id);
+                    if (index !== -1) {
+                        state.transactions.splice(index, 1);
+                        updateDashboard();
+                        
+                        // Close the detail modal
+                        document.getElementById('transaction-detail-modal').classList.remove('show');
+                        
+                        // Show success message
+                        const successDiv = document.createElement('div');
+                        successDiv.className = 'fixed bottom-4 right-4 glass p-4 rounded-lg z-50 fade-in bg-red-500 bg-opacity-20';
+                        successDiv.innerHTML = `
+                            <div class="flex items-center">
+                                <i class="bi bi-trash-fill text-white text-xl mr-2"></i>
+                                <div>
+                                    <p class="font-bold text-white">Transaction Deleted Successfully!</p>
+                                </div>
+                            </div>
+                        `;
+                        document.body.appendChild(successDiv);
+                        
+                        // Remove the success message after 5 seconds
+                        setTimeout(() => {
+                            successDiv.style.opacity = '0';
+                            setTimeout(() => {
+                                document.body.removeChild(successDiv);
+                            }, 300);
+                        }, 5000);
+                        
+                        return true;
+                    }
+                }
+                return false;
+            } catch (error) {
+                console.error('Error deleting transaction:', error);
+                return false;
+            }
+        }
+
+        // Filter transactions by date range
+        function filterByDateRange() {
+            state.startDate = document.getElementById('start-date').value;
+            state.endDate = document.getElementById('end-date').value;
+            
+            if (!state.startDate || !state.endDate) {
+                alert('Please select both start and end dates');
+                return;
+            }
+            
+            state.filterMode = 'date-range';
+            updateDashboard();
+        }
+
+        // Filter transactions
+        function filterTransactions(filterType) {
+            state.filterMode = filterType;
+            
+            // Reset date range inputs when using predefined filters
+            if (filterType !== 'date-range') {
+                state.startDate = null;
+                state.endDate = null;
+            }
+            
+            updateDashboard();
+        }
+
+        // Handle transaction form submission
+        document.getElementById('transaction-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const now = new Date();
+            const transaction = {
+                type: document.getElementById('transaction-type').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                remarks: document.getElementById('remarks').value || '',
+                date: now.toLocaleDateString('en-IN'),
+                time: now.toLocaleTimeString('en-IN'),
+                timestamp: now.getTime(),
+                userId: userId
+            };
+            
+            if (!transaction.type) {
+                alert('Please select a transaction type');
+                return;
+            }
+            
+            if (isNaN(transaction.amount) || transaction.amount <= 0) {
+                alert('Please enter a valid amount');
+                return;
+            }
+
+            saveTransaction(transaction);
+        });
+
+        // Get readable label for transaction type
+        function getTypeLabel(type) {
+            const labels = {
+                'emitra': 'E-Mitra Work',
+                'aeps': 'AEPS',
+                'photocopy': 'Photocopy',
+                'lamination': 'Lamination',
+                'money_transfer': 'Money Transfer',
+                'document': 'Document Work',
+                'winding': 'Winding Work',
+                'online_form': 'Online Form',
+                'aadhar_download': 'Aadhar Download',
+                'marksheet_download': 'Marksheet Download',
+                'other': 'Other Work'
+            };
+            return labels[type] || type;
+        }
+
+        // Get category badge color
+        function getCategoryBadge(type) {
+            const typeLabel = getTypeLabel(type);
+            return `<span class="category-badge">${typeLabel}</span>`;
+        }
+
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Update dashboard with filtered transactions
+        function updateDashboard() {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const weekStart = today - (6 * 24 * 60 * 60 * 1000); // 7 days including today
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+            
+            let filteredTransactions = [...state.transactions];
+            
+            // Filter transactions based on filter mode
+            if (state.filterMode === 'today') {
+                filteredTransactions = state.transactions.filter(t => {
+                    const transactionDate = new Date(t.timestamp).setHours(0,0,0,0);
+                    return transactionDate === today;
+                });
+            } else if (state.filterMode === 'week') {
+                filteredTransactions = state.transactions.filter(t => {
+                    return t.timestamp >= weekStart;
+                });
+            } else if (state.filterMode === 'month') {
+                filteredTransactions = state.transactions.filter(t => {
+                    return t.timestamp >= monthStart;
+                });
+            } else if (state.filterMode === 'date-range' && state.startDate && state.endDate) {
+                const startTs = new Date(state.startDate).getTime();
+                const endTs = new Date(state.endDate).getTime() + (24 * 60 * 60 * 1000 - 1); // End of day
+                
+                filteredTransactions = state.transactions.filter(t => {
+                    return t.timestamp >= startTs && t.timestamp <= endTs;
+                });
+            }
+            
+            // Calculate balances
+            const todayTransactions = state.transactions.filter(t => {
+                const transactionDate = new Date(t.timestamp).setHours(0,0,0,0);
+                return transactionDate === today;
+            });
+            
+            const previousTransactions = state.transactions.filter(t => {
+                const transactionDate = new Date(t.timestamp).setHours(0,0,0,0);
+                return transactionDate < today;
+            });
+            
+            state.todayBalance = todayTransactions.reduce((sum, t) => sum + t.amount, 0);
+            state.previousBalance = previousTransactions.reduce((sum, t) => sum + t.amount, 0);
+            const totalIncome = state.todayBalance + state.previousBalance;
+
+            // Update UI
+            document.getElementById('today-balance').textContent = formatCurrency(state.todayBalance);
+            document.getElementById('prev-balance').textContent = formatCurrency(state.previousBalance);
+            document.getElementById('total-transactions').textContent = state.transactions.length;
+            document.getElementById('net-income').textContent = formatCurrency(totalIncome);
+
+            // Update transactions table
+            const tbody = document.getElementById('transactions-body');
+            tbody.innerHTML = '';
+            
+            if (filteredTransactions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-8 text-white">
+                            <i class="bi bi-inbox text-4xl block mb-2"></i>
+                            No transactions found
+                        </td>
+                    </tr>
+                `;
+            } else {
+                filteredTransactions.forEach(t => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="whitespace-nowrap">${t.date}<br><span class="text-xs opacity-70">${t.time}</span></td>
+                            <td>${getCategoryBadge(t.type)}</td>
+                            <td class="font-bold">${formatCurrency(t.amount)}</td>
+                            <td>${t.remarks || '-'}</td>
+                            <td>
+                                <button onclick="viewTransactionDetails('${t._id}')" class="text-white hover:text-gold">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            // Update category summary
+            updateCategorySummary(filteredTransactions);
+        }
+        
+        // Update category summary
+        function updateCategorySummary(transactions) {
+            const summaryDiv = document.getElementById('category-summary');
+            summaryDiv.innerHTML = '';
+            
+            // Calculate total by category
+            const categorySummary = {};
+            transactions.forEach(t => {
+                if (!categorySummary[t.type]) {
+                    categorySummary[t.type] = {
+                        count: 0,
+                        amount: 0
+                    };
+                }
+                categorySummary[t.type].count++;
+                categorySummary[t.type].amount += t.amount;
+            });
+            
+            // Display summary
+            for (const type in categorySummary) {
+                const summary = categorySummary[type];
+                const typeLabel = getTypeLabel(type);
+                
+                summaryDiv.innerHTML += `
+                    <div class="glass-gold p-4 rounded-lg">
+                        <div class="flex justify-between mb-2">
+                            <span class="text-white font-bold">${typeLabel}</span>
+                            <span class="category-badge">${summary.count} entries</span>
+                        </div>
+                        <div class="text-xl font-bold text-white">${formatCurrency(summary.amount)}</div>
+                    </div>
+                `;
+            }
+            
+            // Add total summary
+            const totalAmount = transactions.reduce((sum, t) => sum + t.amount, 0);
+            summaryDiv.innerHTML += `
+                <div class="glass p-4 rounded-lg md:col-span-2 lg:col-span-3 bg-white bg-opacity-10">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-white font-bold">Total</span>
+                        <span class="category-badge">${transactions.length} entries</span>
+                    </div>
+                    <div class="text-2xl font-bold text-white">${formatCurrency(totalAmount)}</div>
+                </div>
+            `;
+        }
+
+        // View transaction details
+        function viewTransactionDetails(id) {
+            const transaction = state.transactions.find(t => t._id === id);
+            if (!transaction) return;
+            
+            const typeLabel = getTypeLabel(transaction.type);
+            const detailContent = document.getElementById('transaction-detail-content');
+            
+            // Populate modal with transaction details
+            detailContent.innerHTML = `
+                <div class="glass p-4 rounded-lg text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="font-bold text-lg">${getCategoryBadge(transaction.type)}</h4>
+                            <p class="text-sm opacity-70">${transaction.date} | ${transaction.time}</p>
+                        </div>
+                        <div class="text-2xl font-bold">${formatCurrency(transaction.amount)}</div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5 class="font-bold mb-1">Remarks</h5>
+                        <p>${transaction.remarks || 'No remarks provided'}</p>
+                    </div>
+                    
+                    <div class="mt-4 grid grid-cols-2 gap-4">
+                        <div>
+                            <h5 class="font-bold mb-1">Transaction ID</h5>
+                            <p class="text-sm">${transaction._id}</p>
+                        </div>
+                        <div>
+                            <h5 class="font-bold mb-1">User ID</h5>
+                            <p class="text-sm">${transaction.userId}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Show the modal
+            document.getElementById('transaction-detail-modal').classList.add('show');
+            
+            // Setup event handlers for edit and delete buttons
+            document.getElementById('edit-transaction').onclick = function() {
+                // Implement edit functionality here
+                alert('Edit functionality will be implemented in the next update');
+            };
+            
+            document.getElementById('delete-transaction').onclick = function() {
+                deleteTransactionById(transaction._id);
+            };
+        }
+
+        // Download transaction report
+        function downloadReport(format = 'csv') {
+            // Filter transactions based on filter mode
+            let reportTitle = "All Transactions";
+            let filteredTransactions = [...state.transactions];
+            
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const weekStart = today - (6 * 24 * 60 * 60 * 1000);
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+            
+            if (state.filterMode === 'today') {
+                reportTitle = "Today's Transactions";
+                filteredTransactions = state.transactions.filter(t => {
+                    const transactionDate = new Date(t.timestamp).setHours(0,0,0,0);
+                    return transactionDate === today;
+                });
+            } else if (state.filterMode === 'week') {
+                reportTitle = "This Week's Transactions";
+                filteredTransactions = state.transactions.filter(t => {
+                    return t.timestamp >= weekStart;
+                });
+            } else if (state.filterMode === 'month') {
+                reportTitle = "This Month's Transactions";
+                filteredTransactions = state.transactions.filter(t => {
+                    return t.timestamp >= monthStart;
+                });
+            } else if (state.filterMode === 'date-range' && state.startDate && state.endDate) {
+                reportTitle = `Transactions from ${state.startDate} to ${state.endDate}`;
+                const startTs = new Date(state.startDate).getTime();
+                const endTs = new Date(state.endDate).getTime() + (24 * 60 * 60 * 1000 - 1);
+                
+                filteredTransactions = state.transactions.filter(t => {
+                    return t.timestamp >= startTs && t.timestamp <= endTs;
+                });
+            }
+            
+            if (format === 'csv') {
+                downloadCSV(filteredTransactions, reportTitle);
+            } else if (format === 'excel') {
+                downloadExcel(filteredTransactions, reportTitle);
+            } else if (format === 'pdf') {
+                downloadPDF(filteredTransactions, reportTitle);
+            }
+        }
+        
+        // Download CSV report
+        function downloadCSV(transactions, title) {
+            // Create CSV data
+            let csvContent = "Date,Time,Type,Amount,Remarks\n";
+            
+            transactions.forEach(t => {
+                const typeLabel = getTypeLabel(t.type);
+                csvContent += `${t.date},${t.time},"${typeLabel}",${t.amount},"${t.remarks || ''}"\n`;
+            });
+            
+            // Total row
+            const total = transactions.reduce((sum, t) => sum + t.amount, 0);
+            csvContent += `\nTotal,,,"${total}",`;
+            
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `prateek-emitra-${state.filterMode}-report-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+        
+        // Download Excel report
+        function downloadExcel(transactions, title) {
+            // Prepare data for Excel
+            const worksheet = XLSX.utils.json_to_sheet(
+                transactions.map(t => ({
+                    Date: t.date,
+                    Time: t.time,
+                    Type: getTypeLabel(t.type),
+                    Amount: t.amount,
+                    Remarks: t.remarks || ''
+                }))
+            );
+            
+            // Add total row
+            const total = transactions.reduce((sum, t) => sum + t.amount, 0);
+            XLSX.utils.sheet_add_json(
+                worksheet,
+                [{ Date: 'Total', Time: '', Type: '', Amount: total, Remarks: '' }],
+                { skipHeader: true, origin: -1 }
+            );
+            
+            // Create workbook and add worksheet
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, title);
+            
+            // Generate Excel file and trigger download
+            XLSX.writeFile(workbook, `prateek-emitra-${state.filterMode}-report-${new Date().toISOString().split('T')[0]}.xlsx`);
+        }
+        
+        // Download PDF report
+        function downloadPDF(transactions, title) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add title
+            doc.setFontSize(18);
+            doc.text('Prateek E-Mitra Portal', 105, 15, { align: 'center' });
+            
+            doc.setFontSize(14);
+            doc.text(title, 105, 25, { align: 'center' });
+            
+            // Add date
+            doc.setFontSize(10);
+            doc.text(`Generated on: ${new Date().toLocaleDateString('en-IN')}`, 105, 35, { align: 'center' });
+            
+            // Prepare table data
+            const tableColumn = ["Date", "Time", "Type", "Amount", "Remarks"];
+            const tableRows = [];
+            
+            transactions.forEach(t => {
+                const typeLabel = getTypeLabel(t.type);
+                tableRows.push([
+                    t.date,
+                    t.time,
+                    typeLabel,
+                    formatCurrency(t.amount),
+                    t.remarks || '-'
+                ]);
+            });
+            
+            // Add total row
+            const total = transactions.reduce((sum, t) => sum + t.amount, 0);
+            tableRows.push([
+                '',
+                '',
+                'Total',
+                formatCurrency(total),
+                ''
+            ]);
+            
+            // Add table
+            doc.autoTable({
+                head: [tableColumn],
+                body: tableRows,
+                startY: 45,
+                theme: 'grid',
+                styles: {
+                    fontSize: 8,
+                    cellPadding: 3,
+                },
+                headStyles: {
+                    fillColor: [184, 134, 11],
+                    textColor: [255, 255, 255],
+                    fontStyle: 'bold'
+                },
+                alternateRowStyles: {
+                    fillColor: [255, 248, 220, 0.1]
+                },
+                columnStyles: {
+                    3: { halign: 'right' }
+                },
+                foot: [['', '', 'Total', formatCurrency(total), '']],
+                footStyles: {
+                    fillColor: [184, 134, 11, 0.3],
+                    fontStyle: 'bold'
+                }
+            });
+            
+            // Add footer
+            const pageCount = doc.internal.getNumberOfPages();
+            for (let i = 1; i <= pageCount; i++) {
+                doc.setPage(i);
+                doc.setFontSize(8);
+                doc.text(`Page ${i} of ${pageCount}`, 105, doc.internal.pageSize.height - 10, { align: 'center' });
+            }
+            
+            // Save the PDF
+            doc.save(`prateek-emitra-${state.filterMode}-report-${new Date().toISOString().split('T')[0]}.pdf`);
+        }
+
+        // Backup data
+        document.getElementById('backup-data').addEventListener('click', function() {
+            try {
+                const dataToBackup = {
+                    transactions: state.transactions,
+                    userId: userId,
+                    backupDate: new Date().toISOString()
+                };
+                
+                const jsonStr = JSON.stringify(dataToBackup);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `prateek-emitra-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                
+                // Show success notification
+                alert('Backup created successfully!');
+            } catch (error) {
+                console.error('Error creating backup:', error);
+                alert('Error creating backup: ' + error.message);
+            }
+        });
+
+        // Restore data
+        document.getElementById('restore-data').addEventListener('click', function() {
+            if (!confirm('Restoring data will overwrite your current transactions. Continue?')) {
+                return;
+            }
+            
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        
+                        if (!data.transactions || !Array.isArray(data.transactions)) {
+                            throw new Error('Invalid backup file format');
+                        }
+                        
+                        // Restore data
+                        state.transactions = data.transactions;
+                        
+                        // Save restored transactions to database
+                        for (const transaction of state.transactions) {
+                            // Check if the transaction already exists in the database
+                            const existingTransactionIndex = state.transactions.findIndex(t => 
+                                t._id === transaction._id && t._id !== undefined
+                            );
+                            
+                            if (existingTransactionIndex === -1) {
+                                // New transaction, save to database
+                                await fetch('https://r0c8kgwocscg8gsokogwwsw4.zetaverse.one/mongodb', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer dP4m0Sjx6LOwW3k0TsTEzizU2Jg1'
+                                    },
+                                    body: JSON.stringify({
+                                        appSlug: appSlug,
+                                        action: 'create',
+                                        collection: 'transactions',
+                                        data: transaction
+                                    })
+                                });
+                            }
+                        }
+                        
+                        updateDashboard();
+                        alert('Data restored successfully!');
+                        
+                    } catch (error) {
+                        console.error('Error restoring data:', error);
+                        alert('Error restoring data: ' + error.message);
+                    }
+                };
+                
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        });
+
+        // Theme selector
+        document.getElementById('theme-selector').addEventListener('change', function(e) {
+            state.currentTheme = e.target.value;
+            // In a real app, you would update the theme here
+            alert('Theme functionality will be implemented in the next update');
+        });
+
+        // Language selector
+        document.getElementById('language-selector').addEventListener('change', function(e) {
+            state.currentLanguage = e.target.value;
+            // In a real app, you would update the language here
+            alert('Language functionality will be implemented in the next update');
+        });
+
+        // Voice toggle
+        document.querySelectorAll('input[name="voice"]').forEach(input => {
+            input.addEventListener('change', function(e) {
+                state.voiceEnabled = e.target.value === 'on';
+            });
+        });
+
+        // Initialize app - check if user was previously logged in
+        function initApp() {
+            const savedMobile = localStorage.getItem('emitra-mobile');
+            const savedPassword = localStorage.getItem('emitra-password');
+            
+            if (savedMobile === '7891303829' && savedPassword === '8462') {
+                document.getElementById('mobile').value = savedMobile;
+                document.getElementById('password').value = savedPassword;
+                login();
+            }
+
+            // Initialize date inputs with current date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('start-date').value = today;
+            document.getElementById('end-date').value = today;
+        }
+
+        // Add auto-complete for form fields on page load
+        window.addEventListener('load', function() {
+            document.getElementById('mobile').value = '7891303829';
+            document.getElementById('password').value = '8462';
+            initApp();
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function(e) {
+            const settingsModal = document.getElementById('settings-modal');
+            const transactionDetailModal = document.getElementById('transaction-detail-modal');
+            
+            if (e.target === settingsModal) {
+                settingsModal.classList.remove('show');
+            }
+            
+            if (e.target === transactionDetailModal) {
+                transactionDetailModal.classList.remove('show');
+            }
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
